@@ -57,6 +57,48 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.dkanejs.maven.plugins</groupId>
+                <artifactId>docker-compose-maven-plugin</artifactId>
+                <version>2.3.0</version>
+                <configuration>
+                    <composeFile>${project.basedir}/docker-kafka.yml</composeFile>
+                    <build>true</build>
+                    <detachedMode>true</detachedMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>run composer</id>
+                        <goals><goal>down</goal><goal>up</goal></goals>
+                        <phase>pre-integration-test</phase>
+                    </execution>
+                    <!--<execution>
+                        <id>stop composer</id>
+                        <goals><goal>down</goal></goals>
+                        <phase>post-integration-test</phase>
+                    </execution>-->
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>
+                            ${project.build.outputDirectory}
+                        </additionalClasspathElement>
+                    </additionalClasspathElements>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

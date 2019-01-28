@@ -15,8 +15,8 @@ import java.util.*
 class MapProducer {
     private fun createProducer(): Producer<String, String> {
         val props = Properties()
-        props[StreamsConfig.APPLICATION_ID_CONFIG] = "localhost:9092"
-        props[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = "localhost:9092"
+        props[StreamsConfig.APPLICATION_ID_CONFIG] = "mapCreator"
+        props[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = "kafka:9092"
         props[StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG] = StringSerializer::class.java.canonicalName
         props[StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG] = StringSerializer::class.java.canonicalName
         props["key.serializer"] = StringSerializer::class.java.canonicalName

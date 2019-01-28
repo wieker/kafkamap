@@ -22,7 +22,7 @@ class KafkaRunner {
     private fun createStreamingConfig(processorName: String): Properties {
         val streamingConfig = Properties()
         streamingConfig[StreamsConfig.APPLICATION_ID_CONFIG] = processorName
-        streamingConfig[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = "localhost:9092"
+        streamingConfig[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = "kafka:9092"
         streamingConfig[StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG] = Serdes.String().javaClass
         streamingConfig[StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG] = Serdes.String().javaClass
         return streamingConfig

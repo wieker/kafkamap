@@ -1,21 +1,24 @@
 package org.allesoft.kafka.algs
 
-import org.apache.kafka.streams.processor.AbstractProcessor
 import java.lang.StringBuilder
 
-class MapCalculationProcessor : AbstractProcessor<String, String>() {
+class MapCalculationProcessor : AbstractMapProcessor() {
     override fun process(key: String?, value: String?) {
-        val lines = value?.split("#")
-        val height = lines?.size
-        if (lines != null && height != null && height > 1) {
-            val width = lines[0].length
-            val array = convertStringToArray(height, width, lines)
-            var result = calculateClouds(height, width, array)
-            val builder = StringBuilder()
-            builder.append(result)
-            context().forward(key, builder.toString())
-        } else {
-            context().forward(key, "aaa " + lines?.size + " " + lines?.get(0))
+       convertStringToArray(value)?.let {
+           val height = it.size
+           val width = it[0].size
+           val partitionSize = 10
+           if (height > partitionSize) {
+               val array = ArrayList<IntArray>()
+               for (line in it) {
+                   array.add(line)
+                   if (array.size == partitionSize) {
+                       array.clear()
+                   }
+               }
+           }
+           var result = calculateClouds(height, width, it)
+            context().forward(key, result.toString())
         }
         context().commit()
     }
@@ -31,20 +34,6 @@ class MapCalculationProcessor : AbstractProcessor<String, String>() {
             }
         }
         return result
-    }
-
-    private fun convertStringToArray(height: Int, width: Int, parameters: List<String>): Array<IntArray> {
-        val array = Array(height, { IntArray(width) })
-        var i = 0;
-        for (parameter in parameters) {
-            for (j in (0..(parameter.length - 1))) {
-                if (parameter[j] == '1') {
-                    array[i][j] = 1;
-                }
-            }
-            i++
-        }
-        return array
     }
 
     fun deepSearch(matrix: Array<IntArray>, h: Int, w: Int, height: Int, width: Int) {

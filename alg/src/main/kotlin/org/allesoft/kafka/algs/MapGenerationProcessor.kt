@@ -4,7 +4,7 @@ import org.apache.kafka.streams.processor.AbstractProcessor
 import java.lang.StringBuilder
 import java.util.*
 
-class MapGenerationProcessor : AbstractProcessor<String, String>() {
+class MapGenerationProcessor : AbstractMapProcessor() {
     override fun process(key: String?, value: String?) {
         val parameters = value?.split(" ")
         if (parameters != null && parameters.size > 1) {
@@ -38,16 +38,5 @@ class MapGenerationProcessor : AbstractProcessor<String, String>() {
             }
         }
         return array
-    }
-
-    private fun convertArrayToString(array: Array<IntArray>, key: String?) {
-        val builder = StringBuilder()
-        for (line in array) {
-            for (element in line) {
-                builder.append(element)
-            }
-            builder.append("#")
-        }
-        context().forward(key, builder.toString())
     }
 }
